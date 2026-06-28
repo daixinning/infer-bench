@@ -14,13 +14,11 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2"
+
       - name: Build
-        run: |
-          echo "=== Files in repo ==="
-          dir /s /b
-          echo "=== Tauri config ==="
-          type tauri.conf.json
-          cargo build --release
+        run: cargo build --release
         working-directory: src-tauri
 
       - name: List output
