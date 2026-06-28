@@ -11,3 +11,6 @@ src-tauri/gen/
 # OS
 .DS_Store
 Thumbs.db
+
+# Large data files (use Git LFS instead)
+archive/*.jsonl
