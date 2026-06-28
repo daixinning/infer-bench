@@ -1,0 +1,37 @@
+{
+  "productName": "bench-tool",
+  "version": "0.1.0",
+  "identifier": "com.bench-tool.app",
+  "build": {
+    "frontendDist": "..",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": ""
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Bench Tool - LLM 推理压测",
+        "width": 1280,
+        "height": 860,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false
+  },
+  "plugins": {
+    "fs": {
+      "scope": ["**"]
+    },
+    "dialog": {
+      "open": true,
+      "save": true
+    }
+  }
+}
