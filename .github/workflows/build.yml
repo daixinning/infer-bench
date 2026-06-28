@@ -15,7 +15,17 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
-        run: cargo build --release
+        run: |
+          echo "=== Files in repo ==="
+          dir /s /b
+          echo "=== Tauri config ==="
+          type tauri.conf.json
+          cargo build --release
+        working-directory: src-tauri
+
+      - name: List output
+        if: success()
+        run: dir target\release\bench-tool.exe
         working-directory: src-tauri
 
       - name: Upload Windows binary
