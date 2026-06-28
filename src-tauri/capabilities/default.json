@@ -1,0 +1,9 @@
+{
+  "identifier": "default",
+  "description": "Default capabilities",
+  "windows": ["main"],
+  "permissions": [
+    "fs:default",
+    "dialog:default"
+  ]
+}
