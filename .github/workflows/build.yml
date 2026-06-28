@@ -14,15 +14,9 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Setup MSVC environment
-        uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Clean and Build
+      - name: Build
         working-directory: src-tauri
-        shell: pwsh
-        run: |
-          Remove-Item -Recurse -Force target -ErrorAction SilentlyContinue
-          cargo build --release
+        run: cargo build --release
 
       - name: Upload Windows binary
         if: success()

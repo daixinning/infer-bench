@@ -100,7 +100,6 @@ fn chrono_now() -> String {
 // ── Entry point ──────────────────────────────────────────────────
 
 fn main() {
-    let ctx = tauri::tauri_build_context!();
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
@@ -118,6 +117,6 @@ fn main() {
             }
             Ok(())
         })
-        .run(ctx)
+        .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
