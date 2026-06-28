@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "identifier": "com.bench-tool.app",
   "build": {
-    "frontendDist": ".",
+    "frontendDist": "../",
     "devUrl": "http://localhost:1420",
     "beforeDevCommand": "",
     "beforeBuildCommand": ""

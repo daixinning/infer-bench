@@ -21,10 +21,7 @@ jobs:
         working-directory: src-tauri
         env:
           CARGO_INCREMENTAL: "0"
-          TAURI_CONFIG: ../tauri.conf.json
-        run: |
-          cargo clean 2>$null
-          cargo build --release
+        run: cargo build --release
 
       - name: Upload Windows binary
         if: success()
@@ -47,8 +44,6 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
-        env:
-          TAURI_CONFIG: ../tauri.conf.json
         run: cargo build --release
         working-directory: src-tauri
 
@@ -67,8 +62,6 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
-        env:
-          TAURI_CONFIG: ../tauri.conf.json
         run: cargo build --release
         working-directory: src-tauri
 
