@@ -20,25 +20,22 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          Write-Host "=== Node version ==="
-          node --version
-          Write-Host "=== Tauri CLI ==="
+          Write-Host "=== CWD ==="
+          Get-Location
+          Write-Host "=== Tauri CLI version ==="
           npx tauri --version
           Write-Host "=== Build ==="
           npx tauri build 2>&1
           if ($LASTEXITCODE -ne 0) {
-            Write-Host "tauri build failed, trying cargo build..."
+            Write-Host "tauri build failed (exit=$LASTEXITCODE), fallback to cargo build..."
+            Set-Location src-tauri
             cargo build --release 2>&1
           }
-        working-directory: src-tauri
 
       - name: List output
         if: success()
         shell: pwsh
-        run: |
-          Get-ChildItem target/release/*.exe
-          Get-ChildItem target/release/*.msi -ErrorAction SilentlyContinue
-        working-directory: src-tauri
+        run: Get-ChildItem src-tauri/target/release/*.exe
 
       - name: Upload Windows binary
         uses: actions/upload-artifact@v4
