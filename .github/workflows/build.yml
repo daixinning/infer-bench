@@ -14,23 +14,12 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Diagnostics
-        shell: pwsh
-        run: |
-          Write-Host "=== Repo root files ==="
-          Get-ChildItem -Name
-          Write-Host "=== src-tauri files ==="
-          Get-ChildItem -Name src-tauri
-          Write-Host "=== Icons ==="
-          Get-ChildItem -Recurse src-tauri/icons
-          Write-Host "=== rc.exe in PATH? ==="
-          Get-Command rc.exe -ErrorAction SilentlyContinue
-          Write-Host "=== Check VS ==="
-          Get-ChildItem "C:\Program Files\Microsoft Visual Studio" -ErrorAction SilentlyContinue
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build
         working-directory: src-tauri
-        run: cargo build --release --verbose
+        run: cargo build --release
 
       - name: Upload Windows binary
         if: success()
