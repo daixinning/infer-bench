@@ -14,16 +14,30 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --version "^2"
+      - name: Install Tauri CLI (npm)
+        run: npm install -g @tauri-apps/cli
 
       - name: Build
-        run: cargo build --release
+        shell: pwsh
+        run: |
+          Write-Host "=== Node version ==="
+          node --version
+          Write-Host "=== Tauri CLI ==="
+          npx tauri --version
+          Write-Host "=== Build ==="
+          npx tauri build 2>&1
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "tauri build failed, trying cargo build..."
+            cargo build --release 2>&1
+          }
         working-directory: src-tauri
 
       - name: List output
         if: success()
-        run: dir target\release\bench-tool.exe
+        shell: pwsh
+        run: |
+          Get-ChildItem target/release/*.exe
+          Get-ChildItem target/release/*.msi -ErrorAction SilentlyContinue
         working-directory: src-tauri
 
       - name: Upload Windows binary
