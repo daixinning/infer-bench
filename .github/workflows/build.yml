@@ -16,6 +16,8 @@ jobs:
 
       - name: Build
         working-directory: src-tauri
+        env:
+          CARGO_TARGET_DIR: ../target
         run: cargo build --release
 
       - name: Upload Windows binary
@@ -23,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bench-tool-windows
-          path: src-tauri/target/release/bench-tool.exe
+          path: target/release/bench-tool.exe
 
   build-linux:
     runs-on: ubuntu-22.04
@@ -39,6 +41,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
+        env:
+          CARGO_TARGET_DIR: ../target
         run: cargo build --release
         working-directory: src-tauri
 
@@ -46,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bench-tool-linux
-          path: src-tauri/target/release/bench-tool
+          path: target/release/bench-tool
 
   build-macos:
     runs-on: macos-latest
@@ -57,6 +61,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
+        env:
+          CARGO_TARGET_DIR: ../target
         run: cargo build --release
         working-directory: src-tauri
 
@@ -64,4 +70,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bench-tool-macos
-          path: src-tauri/target/release/bench-tool
+          path: target/release/bench-tool
