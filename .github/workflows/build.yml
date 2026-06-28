@@ -19,7 +19,7 @@ jobs:
 
       - name: Build
         working-directory: src-tauri
-        run: cargo build --release
+        run: cargo build --release --jobs 1
 
       - name: Upload Windows binary
         if: success()
