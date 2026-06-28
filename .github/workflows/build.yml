@@ -17,11 +17,12 @@ jobs:
       - name: Setup MSVC environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build
+      - name: Clean and Build
         working-directory: src-tauri
-        env:
-          CARGO_INCREMENTAL: "0"
-        run: cargo build --release
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force target -ErrorAction SilentlyContinue
+          cargo build --release
 
       - name: Upload Windows binary
         if: success()
