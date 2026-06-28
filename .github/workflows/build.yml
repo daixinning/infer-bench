@@ -14,30 +14,28 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Tauri CLI (npm)
-        run: npm install -g @tauri-apps/cli
-
       - name: Build
         shell: pwsh
         run: |
-          Write-Host "=== CWD ==="
-          Get-Location
-          Write-Host "=== Tauri CLI version ==="
-          npx tauri --version
-          Write-Host "=== Build ==="
-          npx tauri build 2>&1
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "tauri build failed (exit=$LASTEXITCODE), fallback to cargo build..."
-            Set-Location src-tauri
-            cargo build --release 2>&1
-          }
+          Set-Location src-tauri
+          echo "=== CWD ===" > ../build-log.txt
+          Get-Location >> ../build-log.txt
+          echo "=== Rust version ===" >> ../build-log.txt
+          rustc --version >> ../build-log.txt 2>&1
+          echo "=== Build ===" >> ../build-log.txt
+          cargo build --release --verbose >> ../build-log.txt 2>&1
+          echo "EXIT_CODE=$LASTEXITCODE" >> ../build-log.txt
+          exit $LASTEXITCODE
 
-      - name: List output
-        if: success()
-        shell: pwsh
-        run: Get-ChildItem src-tauri/target/release/*.exe
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-windows
+          path: build-log.txt
 
       - name: Upload Windows binary
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: bench-tool-windows
