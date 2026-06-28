@@ -143,6 +143,7 @@ export class BenchmarkEngine {
     this.progressCb = () => {};
     this.completeCb = () => {};
     this.errorCb = () => {};
+    this.logCb = () => {};
     this.total = 0; this.done = 0; this.failed = 0;
     this.completed = []; this.startTime = 0;
     this.warmupDone = 0;
@@ -151,6 +152,7 @@ export class BenchmarkEngine {
   onProgress(cb) { this.progressCb = cb; }
   onComplete(cb) { this.completeCb = cb; }
   onError(cb) { this.errorCb = cb; }
+  onLog(cb) { this.logCb = cb; }
   stop() { this.abort = true; }
 
   async start() {
@@ -212,6 +214,9 @@ export class BenchmarkEngine {
   async runOne(prompt, id, isWarmup) {
     if (this.abort) return;
 
+    const rid = isWarmup ? `warmup#${-id}` : `#${id+1}`;
+    if (!isWarmup) this.logCb({ type: "start", id: rid, time: Date.now() });
+
     // Acquire prefill slot first (controls how many requests are in prefill simultaneously)
     await this.prefillLimiter.acquire();
     if (this.abort) { this.prefillLimiter.release(); return; }
@@ -232,6 +237,12 @@ export class BenchmarkEngine {
       if (!isWarmup) {
         if (metrics.success) this.done++; else this.failed++;
         this.completed.push(metrics);
+        this.logCb({
+          type: metrics.success ? "ok" : "fail",
+          id: rid, ttft: metrics.ttft.toFixed(0),
+          outputTokens: metrics.outputTokens, total: metrics.total.toFixed(0),
+          error: metrics.error, time: Date.now(),
+        });
         this.progressCb({
           total: this.total, done: this.done, failed: this.failed,
           completed: [metrics], startTime: this.startTime,
