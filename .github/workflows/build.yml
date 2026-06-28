@@ -15,24 +15,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build
-        shell: pwsh
-        run: |
-          Set-Location src-tauri
-          echo "=== CWD ===" > ../build-log.txt
-          Get-Location >> ../build-log.txt
-          echo "=== Rust version ===" >> ../build-log.txt
-          rustc --version >> ../build-log.txt 2>&1
-          echo "=== Build ===" >> ../build-log.txt
-          cargo build --release --verbose >> ../build-log.txt 2>&1
-          echo "EXIT_CODE=$LASTEXITCODE" >> ../build-log.txt
-          exit $LASTEXITCODE
-
-      - name: Upload build log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log-windows
-          path: build-log.txt
+        working-directory: src-tauri
+        run: cargo build --release --verbose
 
       - name: Upload Windows binary
         if: success()
